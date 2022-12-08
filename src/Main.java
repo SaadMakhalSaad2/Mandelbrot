@@ -4,8 +4,8 @@ import javax.swing.JFrame;
 
 public class Main extends JFrame {
 
-    private final int CA_WIDTH = 768;
-    private final int CA_HEIGHT = 768;
+    private final int CA_WIDTH = 512;
+    private final int CA_HEIGHT = 512;
     private final String CA_TITLE = "Mapping";
 
     public Main() {

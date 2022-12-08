@@ -1,6 +1,7 @@
 
-import java.awt.Container;
-import javax.swing.JFrame;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.Border;
 
 public class Main extends JFrame {
 
@@ -17,11 +18,17 @@ public class Main extends JFrame {
         this.setTitle(CA_TITLE);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Container pane = this.getContentPane();
-        pane.add(new MappingPanel());
+        MappingPanel panel = new MappingPanel();
+        JScrollPane scrollPane = new JScrollPane(panel);
 
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        scrollPane.setLayout(new ScrollPaneLayout());
+
+        this.add(scrollPane);
         this.setVisible(true);
-    } // configure()
+    }
 
     public static void main(String[] args) {
         Main mapping

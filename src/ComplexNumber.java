@@ -25,7 +25,6 @@ public class ComplexNumber {
         double newReal = a + d;
         double newImaginary = b + c;
 
-
         return new ComplexNumber(newReal, newImaginary);
     }
 

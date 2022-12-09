@@ -1,22 +1,15 @@
-import org.w3c.dom.css.RGBColor;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
-import java.nio.Buffer;
 
 public class MappingPanel extends JPanel implements MouseListener {
-
-    public final int BITMAP_WIDTH = 2048;
-    private final int BITMAP_HEIGHT = 2048;
+    public final int BITMAP_WIDTH = 512 * 2;
+    private final int BITMAP_HEIGHT = 512 * 2;
     private final int MAX_ITERATIONS = 50;
-
-
     double uMax = BITMAP_WIDTH;
     double uMin = 0;
     double vMax = BITMAP_HEIGHT;
@@ -35,13 +28,16 @@ public class MappingPanel extends JPanel implements MouseListener {
                 double x = xMin + (u - uMin) / (uMax - uMin) * (xMax - xMin);
                 double y = yMin + (v - vMin) / (vMax - vMin) * (yMax - yMin);
 
-
                 ComplexNumber z = new ComplexNumber(0, 0);
                 ComplexNumber c = new ComplexNumber(x, y);
+               // int counter = mandelbrot(z, c);
+
+//                ComplexNumber z = new ComplexNumber(x, y);
+//                ComplexNumber c = new ComplexNumber(-1.25, 0);
+                //ComplexNumber c = new ComplexNumber(.1, .7);
 
                 int counter = mandelbrot(z, c);
-                Color color = chooseColor(counter);
-
+                Color color = chooseColorModulus(counter);
                 int[] colorArray = {color.getRed(), color.getGreen(), color.getBlue()};
                 raster.setPixel(u, v, colorArray);
             }
@@ -57,13 +53,14 @@ public class MappingPanel extends JPanel implements MouseListener {
                 counter++;
             }
         }
+        System.out.println("counter " + counter);
         return counter;
     }
 
-    private Color chooseColor(int counter) {
+    private Color chooseColorModulus(int counter) {
         Color color = Color.black;
         switch (counter % 8) {
-            case 0 -> color = Color.green;
+            case 0 -> color = Color.gray;
             case 1 -> color = Color.gray;
             case 2 -> color = Color.gray;
             case 3 -> color = Color.yellow;
@@ -76,8 +73,8 @@ public class MappingPanel extends JPanel implements MouseListener {
         return color;
     }
 
-    Color chooseColor(double x, double y) {
-        double radius = Math.sqrt(x * x + y * y);
+    Color chooseColorTrig(int counter) {
+        double radius = Math.sqrt(counter);
         Color color;
         if (radius > 1) {
             color = Color.black;
@@ -90,8 +87,6 @@ public class MappingPanel extends JPanel implements MouseListener {
             System.out.println("val " + val);
 
         }
-
-
         return color;
     }
 
@@ -103,16 +98,17 @@ public class MappingPanel extends JPanel implements MouseListener {
         double w = this.getWidth();
         this.image = new BufferedImage(BITMAP_WIDTH, BITMAP_HEIGHT, BufferedImage.TYPE_INT_RGB);
         raster = this.image.getRaster();
+
         double h = this.getHeight();
         this.addMouseListener(this);
         scale = new AffineTransform();
-        scale.setToScale(w / BITMAP_WIDTH, w / BITMAP_HEIGHT);
+        scale.setToScale(w / BITMAP_WIDTH, (h + 100) / BITMAP_HEIGHT);
     }
 
     double xMax = 2;
-    double xMin = -2;
+    double xMin = -1.2;
     double yMax = 2;
-    double yMin = -2;
+    double yMin = -1.2;
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -124,8 +120,13 @@ public class MappingPanel extends JPanel implements MouseListener {
             xMin = x - dx;
             yMin = y - dx;
             System.out.println("x " + x);
+//            xMin = xMin / 1.2;
+//            yMin = yMin / 1.2;
 
             this.repaint();
+        } else if (e.getClickCount() == 1) {
+//            xMin = xMin * 1.5;
+//            yMin = yMin * 1.5;
         }
     }
 
